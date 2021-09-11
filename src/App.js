@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Button from "./Button";
+import Li from "./Li";
+import Input from "./Input";
+import { useDispatch } from "./Context";
+import List from "./List";
+import { ADD } from "./actions";
 
 function App() {
+  const [state, dispatch] = useDispatch();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <List title={"Todo"}>
+        {state.todos.map((item) => (
+          <Li key={item.id} item={item} dispatch={dispatch} />
+        ))}
+      </List>
+      <List title={state.complete.length === 0 && "Complete"}>
+        {state.complete.map((item) => (
+          <Li key={item.id} item={item} dispatch={dispatch} />
+        ))}
+      </List>
+      <Input
+        placeholder="할일을 적자"
+        onKeyPress={(e) => {
+          if (e.charCode === 13) {
+            dispatch({ type: ADD, todo: e.target.value });
+          }
+        }}
+      />
     </div>
   );
 }
